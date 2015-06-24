@@ -1,0 +1,11 @@
+module student {
+interface StudentLibrary
+	{	
+	  boolean createAccount(in string m_firstName,in string m_lastName,in string m_emailAddress,in string m_phoneNumber,in string m_username,in string m_password,in string m_educationalInstitution);
+	 boolean reserveBook(in string m_username,in string m_password,in string m_bookName,in string m_author);
+	 long checkUser(in string m_username,in string m_password,in string m_educationalInstitution);
+     boolean reserveInterLibrary(in string m_username, in string m_password, in string m_bookName, in string m_authorName);
+	};
+	
+	
+};

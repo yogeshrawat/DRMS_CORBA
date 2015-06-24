@@ -1,0 +1,8 @@
+module admin {
+interface AdminLibrary
+	{	
+	 string getNonReturners(in string AdminUsername, in string strPassword,in string InstitutionName, in long NumDays);	
+	};
+	
+	
+};
