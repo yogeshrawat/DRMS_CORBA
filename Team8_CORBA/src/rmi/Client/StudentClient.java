@@ -8,28 +8,28 @@ import java.util.logging.Logger;
 
 import javax.management.remote.rmi.RMIIIOPServerImpl;
 
+import library.Library;
 import Utility.ValidateInput;
-import rmi.Interface.StudentInterface;
 
 public class StudentClient extends Client{
 
-	static StudentInterface ConcordiaServer;
-	static StudentInterface OttawaServer;
-	static StudentInterface WaterlooServer;
+	static Library ConcordiaServer;
+	static Library OttawaServer;
+	static Library WaterlooServer;
 	static final String Concordia ="Concordia", Ottawa="Ottawa", Waterloo="Waterloo";
 	protected static String instituteName;
 
 	public void InitializeServer() throws Exception {
 		System.setSecurityManager(new RMISecurityManager());
-		ConcordiaServer = (StudentInterface)Naming.lookup("rmi://localhost:1099/Concordia");		
-		OttawaServer = (StudentInterface)Naming.lookup("rmi://localhost:1099/Ottawa");
-		WaterlooServer = (StudentInterface)Naming.lookup("rmi://localhost:1099/Waterloo");	
+		ConcordiaServer = (Library)Naming.lookup("rmi://localhost:1099/Concordia");		
+		OttawaServer = (Library)Naming.lookup("rmi://localhost:1099/Ottawa");
+		WaterlooServer = (Library)Naming.lookup("rmi://localhost:1099/Waterloo");	
 	}
 
-	public StudentInterface ServerValidation(String strInstituteName)
+	public Library ServerValidation(String strInstituteName)
 	{
 		Boolean valid = false;
-		StudentInterface server = null;
+		Library server = null;
 		//		System.out.println("Enter Institute Name");
 		//		System.out.println("'Concordia' For Concordia University");
 		//		System.out.println("'Ottawa' For Ottawa University");
@@ -59,7 +59,7 @@ public class StudentClient extends Client{
 	}
 
 	//Get Server Connection
-	public static StudentInterface LocateServer(String instituteName) {
+	public static Library LocateServer(String instituteName) {
 		if(instituteName.equals(Concordia)) {
 			return ConcordiaServer;
 		}
@@ -89,7 +89,7 @@ public class StudentClient extends Client{
 			StudentClient objClient = new StudentClient();
 			//initialize the connections to registry
 			objClient.InitializeServer();
-			StudentInterface objServer = null;
+			Library objServer = null;
 			Scanner keyboard = new Scanner(System.in);
 			//to which server you want to connect
 			//objServer = objClient.ServerValidation(keyboard);

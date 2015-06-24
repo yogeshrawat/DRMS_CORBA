@@ -6,31 +6,31 @@ import java.rmi.Naming;
 import java.rmi.RMISecurityManager;
 import java.util.Scanner;
 
-import rmi.Interface.AdminInterface;
-import rmi.Interface.StudentInterface;
+import library.Library;
+
 
 public class AdminClient extends Client {
 
-	static AdminInterface ConcordiaServer;
-	static AdminInterface OttawaServer;
-	static AdminInterface WaterlooServer;
+	static Library ConcordiaServer;
+	static Library OttawaServer;
+	static Library WaterlooServer;
 	static final String Concordia = "Concordia", Ottawa = "Ottawa",
 			Waterloo = "Waterloo";
 	protected static String instituteName;
 
 	public void InitializeServer() throws Exception {
 		System.setSecurityManager(new RMISecurityManager());
-		ConcordiaServer = (AdminInterface) Naming
+		ConcordiaServer = (Library) Naming
 				.lookup("rmi://localhost:1099/Concordia");
-		OttawaServer = (AdminInterface) Naming
+		OttawaServer = (Library) Naming
 				.lookup("rmi://localhost:1099/Ottawa");
-		WaterlooServer = (AdminInterface) Naming
+		WaterlooServer = (Library) Naming
 				.lookup("rmi://localhost:1099/Waterloo");
 	}
 
-	public AdminInterface ServerValidation(Scanner keyboard) {
+	public Library ServerValidation(Scanner keyboard) {
 		Boolean valid = false;
-		AdminInterface server = null;
+		Library server = null;
 		System.out.println("Enter Institute Name");
 		System.out.println("'Concordia' For Concordia University");
 		System.out.println("'Ottawa' For Ottawa University");
@@ -56,7 +56,7 @@ public class AdminClient extends Client {
 	}
 
 	// Get Server Connection
-	public static AdminInterface LocateServer(String instituteName) {
+	public static Library LocateServer(String instituteName) {
 		if (instituteName.equals(Concordia)) {
 			return ConcordiaServer;
 		} else if (instituteName.equals(Ottawa)) {
@@ -81,7 +81,7 @@ public class AdminClient extends Client {
 			AdminClient objClient = new AdminClient();
 			//initialize the connections to registry
 			objClient.InitializeServer();
-			AdminInterface objServer = null;
+			Library objServer = null;
 			Scanner keyboard = new Scanner(System.in);
 			//to which server you want to connect
 			objServer = objClient.ServerValidation(keyboard);
