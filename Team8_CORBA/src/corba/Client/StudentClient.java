@@ -195,13 +195,20 @@ public class StudentClient extends Client{
 						objClient.logger.info("Book reserved successfully for user "+userName);
 					}
 					else{
+						if(objServer.reserveInterLibrary(userName, password, bookName, authorName))	
+						{
+							objClient.setLogger(userName, ".\\logs\\students\\"+userName+".txt");
+							objClient.logger.info("Interlibrary : Book reserved successfully for user "+userName);
+						}
+						else{
 						objClient.setLogger(userName, ".\\logs\\students\\"+userName+".txt");
 						objClient.logger.info("Book could not be reserved for : "+userName);
+						}
 
 					}					
 					break;
 				case 3: 
-					System.out.println("Have a nice day!");
+					System.out.println("Thank You \n Have a nice day!");
 					keyboard.close();
 					System.exit(0);
 				default:
