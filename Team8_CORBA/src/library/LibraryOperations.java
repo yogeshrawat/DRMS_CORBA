@@ -1,11 +1,11 @@
-package student;
+package library;
 
 /**
- * Interface definition: StudentLibrary.
+ * Interface definition: Library.
  * 
  * @author OpenORB Compiler
  */
-public interface StudentLibraryOperations
+public interface LibraryOperations
 {
     /**
      * Operation createAccount
@@ -26,5 +26,10 @@ public interface StudentLibraryOperations
      * Operation reserveInterLibrary
      */
     public boolean reserveInterLibrary(String m_username, String m_password, String m_bookName, String m_authorName);
+
+    /**
+     * Operation getNonReturners
+     */
+    public String getNonReturners(String AdminUsername, String strPassword, String InstitutionName, int NumDays);
 
 }

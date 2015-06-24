@@ -1,29 +1,29 @@
-package admin;
+package library;
 
 /** 
- * Helper class for : AdminLibrary
+ * Helper class for : Library
  *  
  * @author OpenORB Compiler
  */ 
-public class AdminLibraryHelper
+public class LibraryHelper
 {
     /**
-     * Insert AdminLibrary into an any
+     * Insert Library into an any
      * @param a an any
-     * @param t AdminLibrary value
+     * @param t Library value
      */
-    public static void insert(org.omg.CORBA.Any a, admin.AdminLibrary t)
+    public static void insert(org.omg.CORBA.Any a, library.Library t)
     {
         a.insert_Object(t , type());
     }
 
     /**
-     * Extract AdminLibrary from an any
+     * Extract Library from an any
      *
      * @param a an any
-     * @return the extracted AdminLibrary value
+     * @return the extracted Library value
      */
-    public static admin.AdminLibrary extract( org.omg.CORBA.Any a )
+    public static library.Library extract( org.omg.CORBA.Any a )
     {
         if ( !a.type().equivalent( type() ) )
         {
@@ -31,7 +31,7 @@ public class AdminLibraryHelper
         }
         try
         {
-            return admin.AdminLibraryHelper.narrow( a.extract_Object() );
+            return library.LibraryHelper.narrow( a.extract_Object() );
         }
         catch ( final org.omg.CORBA.BAD_PARAM e )
         {
@@ -45,20 +45,20 @@ public class AdminLibraryHelper
     private static org.omg.CORBA.TypeCode _tc = null;
 
     /**
-     * Return the AdminLibrary TypeCode
+     * Return the Library TypeCode
      * @return a TypeCode
      */
     public static org.omg.CORBA.TypeCode type()
     {
         if (_tc == null) {
             org.omg.CORBA.ORB orb = org.omg.CORBA.ORB.init();
-            _tc = orb.create_interface_tc( id(), "AdminLibrary" );
+            _tc = orb.create_interface_tc( id(), "Library" );
         }
         return _tc;
     }
 
     /**
-     * Return the AdminLibrary IDL ID
+     * Return the Library IDL ID
      * @return an ID
      */
     public static String id()
@@ -66,43 +66,43 @@ public class AdminLibraryHelper
         return _id;
     }
 
-    private final static String _id = "IDL:admin/AdminLibrary:1.0";
+    private final static String _id = "IDL:library/Library:1.0";
 
     /**
-     * Read AdminLibrary from a marshalled stream
+     * Read Library from a marshalled stream
      * @param istream the input stream
-     * @return the readed AdminLibrary value
+     * @return the readed Library value
      */
-    public static admin.AdminLibrary read(org.omg.CORBA.portable.InputStream istream)
+    public static library.Library read(org.omg.CORBA.portable.InputStream istream)
     {
-        return(admin.AdminLibrary)istream.read_Object(admin._AdminLibraryStub.class);
+        return(library.Library)istream.read_Object(library._LibraryStub.class);
     }
 
     /**
-     * Write AdminLibrary into a marshalled stream
+     * Write Library into a marshalled stream
      * @param ostream the output stream
-     * @param value AdminLibrary value
+     * @param value Library value
      */
-    public static void write(org.omg.CORBA.portable.OutputStream ostream, admin.AdminLibrary value)
+    public static void write(org.omg.CORBA.portable.OutputStream ostream, library.Library value)
     {
         ostream.write_Object((org.omg.CORBA.portable.ObjectImpl)value);
     }
 
     /**
-     * Narrow CORBA::Object to AdminLibrary
+     * Narrow CORBA::Object to Library
      * @param obj the CORBA Object
-     * @return AdminLibrary Object
+     * @return Library Object
      */
-    public static AdminLibrary narrow(org.omg.CORBA.Object obj)
+    public static Library narrow(org.omg.CORBA.Object obj)
     {
         if (obj == null)
             return null;
-        if (obj instanceof AdminLibrary)
-            return (AdminLibrary)obj;
+        if (obj instanceof Library)
+            return (Library)obj;
 
         if (obj._is_a(id()))
         {
-            _AdminLibraryStub stub = new _AdminLibraryStub();
+            _LibraryStub stub = new _LibraryStub();
             stub._set_delegate(((org.omg.CORBA.portable.ObjectImpl)obj)._get_delegate());
             return stub;
         }
@@ -111,18 +111,18 @@ public class AdminLibraryHelper
     }
 
     /**
-     * Unchecked Narrow CORBA::Object to AdminLibrary
+     * Unchecked Narrow CORBA::Object to Library
      * @param obj the CORBA Object
-     * @return AdminLibrary Object
+     * @return Library Object
      */
-    public static AdminLibrary unchecked_narrow(org.omg.CORBA.Object obj)
+    public static Library unchecked_narrow(org.omg.CORBA.Object obj)
     {
         if (obj == null)
             return null;
-        if (obj instanceof AdminLibrary)
-            return (AdminLibrary)obj;
+        if (obj instanceof Library)
+            return (Library)obj;
 
-        _AdminLibraryStub stub = new _AdminLibraryStub();
+        _LibraryStub stub = new _LibraryStub();
         stub._set_delegate(((org.omg.CORBA.portable.ObjectImpl)obj)._get_delegate());
         return stub;
 

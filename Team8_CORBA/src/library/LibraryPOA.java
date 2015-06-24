@@ -1,26 +1,26 @@
-package student;
+package library;
 
 /**
- * Interface definition: StudentLibrary.
+ * Interface definition: Library.
  * 
  * @author OpenORB Compiler
  */
-public abstract class StudentLibraryPOA extends org.omg.PortableServer.Servant
-        implements StudentLibraryOperations, org.omg.CORBA.portable.InvokeHandler
+public abstract class LibraryPOA extends org.omg.PortableServer.Servant
+        implements LibraryOperations, org.omg.CORBA.portable.InvokeHandler
 {
-    public StudentLibrary _this()
+    public Library _this()
     {
-        return StudentLibraryHelper.narrow(_this_object());
+        return LibraryHelper.narrow(_this_object());
     }
 
-    public StudentLibrary _this(org.omg.CORBA.ORB orb)
+    public Library _this(org.omg.CORBA.ORB orb)
     {
-        return StudentLibraryHelper.narrow(_this_object(orb));
+        return LibraryHelper.narrow(_this_object(orb));
     }
 
     private static String [] _ids_list =
     {
-        "IDL:student/StudentLibrary:1.0"
+        "IDL:library/Library:1.0"
     };
 
     public String[] _all_interfaces(org.omg.PortableServer.POA poa, byte [] objectId)
@@ -37,6 +37,8 @@ public abstract class StudentLibraryPOA extends org.omg.PortableServer.Servant
                 return _invoke_checkUser(_is, handler);
         } else if (opName.equals("createAccount")) {
                 return _invoke_createAccount(_is, handler);
+        } else if (opName.equals("getNonReturners")) {
+                return _invoke_getNonReturners(_is, handler);
         } else if (opName.equals("reserveBook")) {
                 return _invoke_reserveBook(_is, handler);
         } else if (opName.equals("reserveInterLibrary")) {
@@ -113,6 +115,23 @@ public abstract class StudentLibraryPOA extends org.omg.PortableServer.Servant
 
         _output = handler.createReply();
         _output.write_boolean(_arg_result);
+
+        return _output;
+    }
+
+    private org.omg.CORBA.portable.OutputStream _invoke_getNonReturners(
+            final org.omg.CORBA.portable.InputStream _is,
+            final org.omg.CORBA.portable.ResponseHandler handler) {
+        org.omg.CORBA.portable.OutputStream _output;
+        String arg0_in = _is.read_string();
+        String arg1_in = _is.read_string();
+        String arg2_in = _is.read_string();
+        int arg3_in = _is.read_long();
+
+        String _arg_result = getNonReturners(arg0_in, arg1_in, arg2_in, arg3_in);
+
+        _output = handler.createReply();
+        _output.write_string(_arg_result);
 
         return _output;
     }

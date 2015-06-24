@@ -1,58 +1,58 @@
-package student;
+package library;
 
 /**
- * Holder class for : StudentLibrary
+ * Holder class for : Library
  * 
  * @author OpenORB Compiler
  */
-final public class StudentLibraryHolder
+final public class LibraryHolder
         implements org.omg.CORBA.portable.Streamable
 {
     /**
-     * Internal StudentLibrary value
+     * Internal Library value
      */
-    public student.StudentLibrary value;
+    public library.Library value;
 
     /**
      * Default constructor
      */
-    public StudentLibraryHolder()
+    public LibraryHolder()
     { }
 
     /**
      * Constructor with value initialisation
      * @param initial the initial value
      */
-    public StudentLibraryHolder(student.StudentLibrary initial)
+    public LibraryHolder(library.Library initial)
     {
         value = initial;
     }
 
     /**
-     * Read StudentLibrary from a marshalled stream
+     * Read Library from a marshalled stream
      * @param istream the input stream
      */
     public void _read(org.omg.CORBA.portable.InputStream istream)
     {
-        value = StudentLibraryHelper.read(istream);
+        value = LibraryHelper.read(istream);
     }
 
     /**
-     * Write StudentLibrary into a marshalled stream
+     * Write Library into a marshalled stream
      * @param ostream the output stream
      */
     public void _write(org.omg.CORBA.portable.OutputStream ostream)
     {
-        StudentLibraryHelper.write(ostream,value);
+        LibraryHelper.write(ostream,value);
     }
 
     /**
-     * Return the StudentLibrary TypeCode
+     * Return the Library TypeCode
      * @return a TypeCode
      */
     public org.omg.CORBA.TypeCode _type()
     {
-        return StudentLibraryHelper.type();
+        return LibraryHelper.type();
     }
 
 }

@@ -1,10 +1,11 @@
 package rmi.Server;
+import library.*;
+
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.rmi.AlreadyBoundException;
 import java.rmi.Remote;
-
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
@@ -19,13 +20,14 @@ import rmi.Interface.AdminInterface;
 import rmi.Interface.StudentInterface;
 import rmi.LibraryObjects.Book;
 import rmi.LibraryObjects.Student;
+
 import java.util.logging.FileHandler;
 import java.util.logging.LogRecord;
 import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
 
 
-public class RMIServer extends Thread implements StudentInterface, AdminInterface {
+public class RMIServer extends LibraryPOA implements Runnable {
 
 	private HashMap<Character, ArrayList<Student>> tableStudents = new HashMap<Character, ArrayList<Student>>();
 	//private static ArrayList<List<Student>> listStudents = new ArrayList<List<Student>>(); 
@@ -189,7 +191,6 @@ public class RMIServer extends Thread implements StudentInterface, AdminInterfac
 	@Override
 	public boolean createAccount(String strFirstName, String strLastName, String strEmailAddress, String strPhoneNumber, String strUsername,
 			String strPassword, String strEducationalInstitution)
-					throws RemoteException
 	{
 		if(isExist(strUsername, strEducationalInstitution )){
 			return false;
@@ -233,7 +234,7 @@ public class RMIServer extends Thread implements StudentInterface, AdminInterfac
 	}
 
 	@Override
-	public boolean reserveBook(String strUsername, String strPassword, String strBookName, String strAuthor) throws RemoteException 
+	public boolean reserveBook(String strUsername, String strPassword, String strBookName, String strAuthor) 
 	{
 		boolean success =false;
 		int iLoginResult = 0;
@@ -310,7 +311,7 @@ public class RMIServer extends Thread implements StudentInterface, AdminInterfac
 
 
 	@Override
-	public int checkUser(String strUsername, String strPassword,String strEducationalInstitution) throws RemoteException 
+	public int checkUser(String strUsername, String strPassword,String strEducationalInstitution) 
 	{
 		// TODO Auto-generated method stub
 		int login = 0;
@@ -348,15 +349,15 @@ public class RMIServer extends Thread implements StudentInterface, AdminInterfac
 	//		return null;
 	//	}
 
-	public void exportServer() throws Exception
-	{
-		Remote objremote1 = UnicastRemoteObject.exportObject(this,2020);
-		Registry registry1 = LocateRegistry.createRegistry(2020);
-		registry1.bind("Institution", objremote1);
-	}
+//	public void exportServer() throws Exception
+//	{
+//		Remote objremote1 = UnicastRemoteObject.exportObject(this,2020);
+//		Registry registry1 = LocateRegistry.createRegistry(2020);
+//		registry1.bind("Institution", objremote1);
+//	}
 
 	@Override
-	public String getNonReturners(String AdminUsername, String AdminPassword,String InstitutionName, int NumDays) throws RemoteException 
+	public String getNonReturners(String AdminUsername, String AdminPassword,String InstitutionName, int NumDays) 
 	{
 		String response = null;
 		if(AdminUsername.equalsIgnoreCase("admin")&&AdminPassword.equals("admin"))
@@ -466,6 +467,13 @@ public class RMIServer extends Thread implements StudentInterface, AdminInterfac
 			
 		}
 		return objStudent;
+	}
+
+	@Override
+	public boolean reserveInterLibrary(String m_username, String m_password,
+			String m_bookName, String m_authorName) {
+		// TODO Auto-generated method stub
+		return false;
 	}
 
 }
