@@ -1,4 +1,4 @@
-package rmi.LibraryObjects;
+package corba.LibraryObjects;
 public class Book 
 {
 	private String name;

@@ -1,4 +1,4 @@
-package rmi.Server;
+package corba.Server;
 import library.*;
 
 import java.net.DatagramPacket;
@@ -18,33 +18,34 @@ import java.util.Map;
 
 import rmi.Interface.AdminInterface;
 import rmi.Interface.StudentInterface;
-import rmi.LibraryObjects.Book;
-import rmi.LibraryObjects.Student;
 
 import java.util.logging.FileHandler;
 import java.util.logging.LogRecord;
 import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
 
+import corba.LibraryObjects.Book;
+import corba.LibraryObjects.Student;
 
-public class RMIServer extends LibraryPOA implements Runnable {
+
+public class LibraryServer extends LibraryPOA implements Runnable {
 
 	private HashMap<Character, ArrayList<Student>> tableStudents = new HashMap<Character, ArrayList<Student>>();
 	//private static ArrayList<List<Student>> listStudents = new ArrayList<List<Student>>(); 
 	private HashMap<String, Book> tableBooks   = new HashMap<String, Book>();
 	private String instituteName;
 	private int udpPort;
-	private static ArrayList<RMIServer> LibraryServers = null;
+	private static ArrayList<LibraryServer> LibraryServers = null;
 
 	private Logger logger;
 
-	public RMIServer(String instituteName)
+	public LibraryServer(String instituteName)
 	{
 		this.instituteName = instituteName;
 		this.setLogger(".\\logs\\library\\"+instituteName+".txt");
 	}
 
-	public RMIServer(){
+	public LibraryServer(){
 
 	}
 
@@ -67,7 +68,7 @@ public class RMIServer extends LibraryPOA implements Runnable {
 	{
 		return this.udpPort;
 	}
-	public RMIServer(String strInstitution, int iPortNum) {
+	public LibraryServer(String strInstitution, int iPortNum) {
 		// TODO Auto-generated constructor stub
 		instituteName = strInstitution;
 		udpPort = iPortNum;
@@ -80,9 +81,9 @@ public class RMIServer extends LibraryPOA implements Runnable {
 		int rmiRegistryPort = 1099;
 		Registry rmiRegistry = LocateRegistry.createRegistry(rmiRegistryPort);
 
-		RMIServer Server1 = new RMIServer("Concordia",50001);
-		RMIServer Server2 = new RMIServer("Ottawa",50002);
-		RMIServer Server3 = new RMIServer("Waterloo",50003);
+		LibraryServer Server1 = new LibraryServer("Concordia",50001);
+		LibraryServer Server2 = new LibraryServer("Ottawa",50002);
+		LibraryServer Server3 = new LibraryServer("Waterloo",50003);
 
 		Remote objremote1 = UnicastRemoteObject.exportObject(Server1,rmiRegistryPort);
 		rmiRegistry.bind("Concordia", objremote1);
@@ -104,7 +105,7 @@ public class RMIServer extends LibraryPOA implements Runnable {
 		addData(Server2);
 		addData(Server3);
 
-		LibraryServers = new ArrayList<RMIServer>();
+		LibraryServers = new ArrayList<LibraryServer>();
 		LibraryServers.add(Server1);
 		LibraryServers.add(Server2);
 		LibraryServers.add(Server3);
@@ -127,7 +128,7 @@ public class RMIServer extends LibraryPOA implements Runnable {
 	}
 
 	private static int i=1;
-	public static void addData(RMIServer server) throws RemoteException
+	public static void addData(LibraryServer server) throws RemoteException
 	{
 		for(int j=1; j<5; j++) { 
 			Book book = new Book("Book"+j, "Author"+j, 10);
@@ -363,7 +364,7 @@ public class RMIServer extends LibraryPOA implements Runnable {
 		if(AdminUsername.equalsIgnoreCase("admin")&&AdminPassword.equals("admin"))
 		{
 			response += GetNonReturnersByServer(NumDays);
-			for(RMIServer Server : LibraryServers)
+			for(LibraryServer Server : LibraryServers)
 			{
 				synchronized(Server)
 				{

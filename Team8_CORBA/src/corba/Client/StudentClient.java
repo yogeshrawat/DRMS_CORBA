@@ -1,4 +1,4 @@
-package rmi.Client;
+package corba.Client;
 import java.io.*;
 import java.rmi.*;
 import java.util.ArrayList;

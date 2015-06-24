@@ -1,4 +1,4 @@
-package rmi.Client;
+package corba.Client;
 
 import java.rmi.Naming;
 import java.rmi.RMISecurityManager;
