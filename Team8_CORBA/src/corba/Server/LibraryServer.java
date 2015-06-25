@@ -4,20 +4,20 @@ import library.*;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
-import java.rmi.AlreadyBoundException;
-import java.rmi.Remote;
-import java.rmi.RemoteException;
-import java.rmi.registry.LocateRegistry;
-import java.rmi.registry.Registry;
-import java.rmi.server.UnicastRemoteObject;
+//import java.rmi.AlreadyBoundException;
+//import java.rmi.Remote;
+//import java.rmi.RemoteException;
+//import java.rmi.registry.LocateRegistry;
+//import java.rmi.registry.Registry;
+//import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import rmi.Interface.AdminInterface;
-import rmi.Interface.StudentInterface;
+//import rmi.Interface.AdminInterface;
+//import rmi.Interface.StudentInterface;
 
 import java.util.logging.FileHandler;
 import java.util.logging.LogRecord;
@@ -75,24 +75,24 @@ public class LibraryServer extends LibraryPOA implements Runnable {
 		this.setLogger("logs/library/"+instituteName+".txt");
 	}
 
-	public static void main(String[] args) throws RemoteException, AlreadyBoundException {
+	public static void main(String[] args){
 
 		// TODO Auto-generated method stub
 		int rmiRegistryPort = 1099;
-		Registry rmiRegistry = LocateRegistry.createRegistry(rmiRegistryPort);
+		//Registry rmiRegistry = LocateRegistry.createRegistry(rmiRegistryPort);
 
-		LibraryServer Server1 = new LibraryServer("Concordia",50001);
-		LibraryServer Server2 = new LibraryServer("Ottawa",50002);
-		LibraryServer Server3 = new LibraryServer("Waterloo",50003);
+		Thread Server1 = new Thread(new LibraryServer("Concordia",50001));
+		Thread Server2 = new Thread(new LibraryServer("Ottawa",50002));
+		Thread Server3 = new Thread(new LibraryServer("Waterloo",50003));
 
-		Remote objremote1 = UnicastRemoteObject.exportObject(Server1,rmiRegistryPort);
-		rmiRegistry.bind("Concordia", objremote1);
+		//Remote objremote1 = UnicastRemoteObject.exportObject(Server1,rmiRegistryPort);
+		//rmiRegistry.bind("Concordia", objremote1);
 
-		Remote objremote2 = UnicastRemoteObject.exportObject(Server2,rmiRegistryPort);
-		rmiRegistry.bind("Ottawa", objremote2);
+		//Remote objremote2 = UnicastRemoteObject.exportObject(Server2,rmiRegistryPort);
+		//rmiRegistry.bind("Ottawa", objremote2);
 
-		Remote objremote3 = UnicastRemoteObject.exportObject(Server3,rmiRegistryPort);
-		rmiRegistry.bind("Waterloo", objremote3);
+		//Remote objremote3 = UnicastRemoteObject.exportObject(Server3,rmiRegistryPort);
+		//rmiRegistry.bind("Waterloo", objremote3);
 
 		Server1.start();
 		System.out.println("Concordia server up and running!");
@@ -101,14 +101,14 @@ public class LibraryServer extends LibraryPOA implements Runnable {
 		Server3.start();
 		System.out.println("Waterloo server up and running!");
 
-		addData(Server1);
-		addData(Server2);
-		addData(Server3);
+//		addData((LibraryServer)Server1);
+//		addData(Server2);
+//		addData(Server3);
 
-		LibraryServers = new ArrayList<LibraryServer>();
-		LibraryServers.add(Server1);
-		LibraryServers.add(Server2);
-		LibraryServers.add(Server3);
+//		LibraryServers = new ArrayList<LibraryServer>();
+//		LibraryServers.add(Server1);
+//		LibraryServers.add(Server2);
+//		LibraryServers.add(Server3);
 
 
 
@@ -128,26 +128,26 @@ public class LibraryServer extends LibraryPOA implements Runnable {
 	}
 
 	private static int i=1;
-	public static void addData(LibraryServer server) throws RemoteException
-	{
+	public void addData()
+	{		
 		for(int j=1; j<5; j++) { 
 			Book book = new Book("Book"+j, "Author"+j, 10);
-			server.tableBooks.put(book.getName(), book);
+			this.tableBooks.put(book.getName(), book);
 		}
 		
 		ArrayList<Student> s = new ArrayList<Student>();
 		for(char i = 'A'; i <= 'Z' ; i++)
 		{
-			server.tableStudents.putIfAbsent(i, s);
+			this.tableStudents.putIfAbsent(i, s);
 		}
 
-		server.createAccount("Student"+i, "L"+i, "Student"+i+"@test.com", "1234567890", "Student"+i, "abc123", server.instituteName);
-		server.createAccount("yogesh", "rawat","yogesh@gmail.com","5145156743","yogesh","yogesh",server.instituteName);
-		server.createAccount("aron", "engineer","aron@gmail.com","5145156743","aron123","aron123",server.instituteName);
-		server.createAccount("ashish", "guhe","ashish@gmail.com","5145656743","ashish","ashish",server.instituteName);
+		this.createAccount("Student"+i, "L"+i, "Student"+i+"@test.com", "1234567890", "Student"+i, "abc123", this.instituteName);
+		this.createAccount("yogesh", "rawat","yogesh@gmail.com","5145156743","yogesh","yogesh",this.instituteName);
+		this.createAccount("aron", "engineer","aron@gmail.com","5145156743","aron123","aron123",this.instituteName);
+		this.createAccount("ashish", "guhe","ashish@gmail.com","5145656743","ashish","ashish",this.instituteName);
 		
-		server.reserveBook("yogesh", "yogesh", "Book1", "Author1");
-		ArrayList<Student> list = server.tableStudents.get('y');
+		this.reserveBook("yogesh", "yogesh", "Book1", "Author1");
+		ArrayList<Student> list = this.tableStudents.get('y');
 		
 		Book Book1 = new Book("Book1","Author1",8);
 		for(Student student : list)
@@ -162,7 +162,7 @@ public class LibraryServer extends LibraryPOA implements Runnable {
 	public void run()
 	{
 		DatagramSocket socket = null;
-
+		this.addData();
 		try
 		{
 			socket = new DatagramSocket(this.udpPort);
@@ -288,7 +288,7 @@ public class LibraryServer extends LibraryPOA implements Runnable {
 	}
 	
 	
-	public boolean isExist(String strUsername, String strEducationalInstitution) throws RemoteException 
+	public boolean isExist(String strUsername, String strEducationalInstitution) 
 	{
 		// TODO Auto-generated method stub
 		boolean exist = false;
