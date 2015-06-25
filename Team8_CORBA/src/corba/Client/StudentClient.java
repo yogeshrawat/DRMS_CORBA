@@ -1,14 +1,15 @@
 package corba.Client;
 import java.io.*;
-import java.rmi.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 import java.util.logging.Logger;
 
-import javax.management.remote.rmi.RMIIIOPServerImpl;
+
+import org.omg.CORBA.ORB;
 
 import library.Library;
+import library.LibraryHelper;
 import Utility.ValidateInput;
 
 public class StudentClient extends Client{
@@ -18,12 +19,17 @@ public class StudentClient extends Client{
 	static Library WaterlooServer;
 	static final String Concordia ="Concordia", Ottawa="Ottawa", Waterloo="Waterloo";
 	protected static String instituteName;
+	private String[] args;
 
-	public void InitializeServer() throws Exception {
-		System.setSecurityManager(new RMISecurityManager());
-		ConcordiaServer = (Library)Naming.lookup("rmi://localhost:1099/Concordia");		
-		OttawaServer = (Library)Naming.lookup("rmi://localhost:1099/Ottawa");
-		WaterlooServer = (Library)Naming.lookup("rmi://localhost:1099/Waterloo");	
+	public Library InitializeServer(String[] args, String name) throws Exception 
+	{
+		ORB orb = ORB.init(args, null);
+		BufferedReader br = new BufferedReader(new FileReader("logs/"+name+".txt"));
+		String ior = br.readLine();
+		br.close();
+		
+		org.omg.CORBA.Object o = orb.string_to_object(ior);
+		return LibraryHelper.narrow(o);		
 	}
 
 	public Library ServerValidation(String strInstituteName)
@@ -85,10 +91,14 @@ public class StudentClient extends Client{
 	public static void main(String[] args)
 	{
 		try{
-			System.setProperty("java.security.policy","file:./security.policy");
+			//System.setProperty("java.security.policy","file:./security.policy");
 			StudentClient objClient = new StudentClient();
+			objClient.args = args;
 			//initialize the connections to registry
-			objClient.InitializeServer();
+			objClient.InitializeServer(args, "Concordia");
+			objClient.InitializeServer(args, "Mcgill");
+			objClient.InitializeServer(args, "Waterloo");
+
 			Library objServer = null;
 			Scanner keyboard = new Scanner(System.in);
 			//to which server you want to connect
@@ -158,7 +168,7 @@ public class StudentClient extends Client{
 
 
 						institution= getEducationalInstituteFromUser();
-						objClient.InitializeServer();
+						//objClient.InitializeServer();
 						objServer = objClient.ServerValidation(institution);
 						int loginResult = objServer.checkUser(userName, password, institution);
 						switch(loginResult)

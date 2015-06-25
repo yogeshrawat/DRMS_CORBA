@@ -1,12 +1,14 @@
 package corba.Client;
-
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
 import java.io.FileWriter;
-import java.rmi.Naming;
-import java.rmi.RMISecurityManager;
 import java.util.Scanner;
 
 import library.Library;
+import library.LibraryHelper;
+
+import org.omg.CORBA.ORB;
 
 
 public class AdminClient extends Client {
@@ -18,14 +20,15 @@ public class AdminClient extends Client {
 			Waterloo = "Waterloo";
 	protected static String instituteName;
 
-	public void InitializeServer() throws Exception {
-		System.setSecurityManager(new RMISecurityManager());
-		ConcordiaServer = (Library) Naming
-				.lookup("rmi://localhost:1099/Concordia");
-		OttawaServer = (Library) Naming
-				.lookup("rmi://localhost:1099/Ottawa");
-		WaterlooServer = (Library) Naming
-				.lookup("rmi://localhost:1099/Waterloo");
+	public Library InitializeServer(String[] args, String name) throws Exception 
+	{
+		ORB orb = ORB.init(args, null);
+		BufferedReader br = new BufferedReader(new FileReader("logs/"+name+".txt"));
+		String ior = br.readLine();
+		br.close();
+		
+		org.omg.CORBA.Object o = orb.string_to_object(ior);
+		return LibraryHelper.narrow(o);	
 	}
 
 	public Library ServerValidation(Scanner keyboard) {
@@ -80,7 +83,10 @@ public class AdminClient extends Client {
 			System.setProperty("java.security.policy","file:./security.policy");
 			AdminClient objClient = new AdminClient();
 			//initialize the connections to registry
-			objClient.InitializeServer();
+			objClient.InitializeServer(args, "Concordia");
+			objClient.InitializeServer(args, "Mcgill");
+			objClient.InitializeServer(args, "Waterloo");
+			
 			Library objServer = null;
 			Scanner keyboard = new Scanner(System.in);
 			//to which server you want to connect

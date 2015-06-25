@@ -1,7 +1,5 @@
 package corba.Client;
 
-import java.rmi.Naming;
-import java.rmi.RMISecurityManager;
 import java.util.Scanner;
 import java.util.logging.FileHandler;
 import java.util.logging.Logger;
