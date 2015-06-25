@@ -105,7 +105,7 @@ public class LibraryImpl extends LibraryPOA implements Runnable {
 		public LibraryImpl(String strInstitution, int iPortNum) {
 			instituteName = strInstitution;
 			udpPort = iPortNum;
-			this.setLogger("logs/library/"+instituteName+".txt");
+			this.setLogger(".\\logs\\library\\"+instituteName+".txt");
 		}
 
 //		public static void main(String[] args){
@@ -341,7 +341,7 @@ public class LibraryImpl extends LibraryPOA implements Runnable {
 				}
 				objNewStudent.add(objStudent);
 				
-				logger.info("New User added to the library with username as : "+objStudent.getUserName());
+				//logger.info("New User added to the library with username as : "+objStudent.getUserName());
 				
 			}
 
