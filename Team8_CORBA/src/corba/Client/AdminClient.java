@@ -23,7 +23,7 @@ public class AdminClient extends Client {
 	public Library InitializeServer(String[] args, String name) throws Exception 
 	{
 		ORB orb = ORB.init(args, null);
-		BufferedReader br = new BufferedReader(new FileReader("logs/"+name+".txt"));
+		BufferedReader br = new BufferedReader(new FileReader(".\\logs\\"+name+".txt"));
 		String ior = br.readLine();
 		br.close();
 		
@@ -83,9 +83,9 @@ public class AdminClient extends Client {
 			System.setProperty("java.security.policy","file:./security.policy");
 			AdminClient objClient = new AdminClient();
 			//initialize the connections to registry
-			objClient.InitializeServer(args, "Concordia");
-			objClient.InitializeServer(args, "Mcgill");
-			objClient.InitializeServer(args, "Waterloo");
+			ConcordiaServer = objClient.InitializeServer(args, "Concordia");
+			OttawaServer = objClient.InitializeServer(args, "ottawa");
+			WaterlooServer = objClient.InitializeServer(args, "Waterloo");
 			
 			Library objServer = null;
 			Scanner keyboard = new Scanner(System.in);
