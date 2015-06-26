@@ -111,12 +111,8 @@ public class LibraryImpl extends LibraryPOA implements Runnable {
 		public LibraryImpl(String strInstitution, int iPortNum) {
 			instituteName = strInstitution;
 			udpPort = iPortNum;
-<<<<<<< HEAD
 			this.setLogger("logs/library/"+instituteName+".txt");
 			addData();
-=======
-			this.setLogger(".\\logs\\library\\"+instituteName+".txt");
->>>>>>> branch 'master' of https://github.com/yogeshrawat/DRMS_CORBA.git
 		}
 
 //		public static void main(String[] args){

@@ -24,11 +24,8 @@ public class StudentClient extends Client{
 	public Library InitializeServer(String[] args, String name) throws Exception 
 	{
 		ORB orb = ORB.init(args, null);
-<<<<<<< HEAD
+
 		BufferedReader br = new BufferedReader(new FileReader(".\\Servers\\"+name+".txt"));
-=======
-		BufferedReader br = new BufferedReader(new FileReader(".\\"+name+".txt"));
->>>>>>> branch 'master' of https://github.com/yogeshrawat/DRMS_CORBA.git
 		String ior = br.readLine();
 		br.close();
 		
