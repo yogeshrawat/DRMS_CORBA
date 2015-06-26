@@ -2,7 +2,9 @@ package library;
 //package corba.Server;
 //import library.*;
 
+import java.io.BufferedReader;
 import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.PrintWriter;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
@@ -53,6 +55,10 @@ import org.omg.PortableServer.POAPackage.WrongPolicy;
 
 
 
+
+
+
+
 //import animal.BehaviorImpl;
 import corba.LibraryObjects.Book;
 import corba.LibraryObjects.Student;
@@ -65,7 +71,7 @@ public class LibraryImpl extends LibraryPOA implements Runnable {
 		private HashMap<String, Book> tableBooks   = new HashMap<String, Book>();
 		private String instituteName;
 		private int udpPort;
-		//private static ArrayList<LibraryServer> LibraryServers = null;
+		private static String[] LibraryServers = {"Concordia","ottawa","Waterloo"};
 		private ORB orb= null;
 		private Logger logger;
 
@@ -106,6 +112,7 @@ public class LibraryImpl extends LibraryPOA implements Runnable {
 			instituteName = strInstitution;
 			udpPort = iPortNum;
 			this.setLogger("logs/library/"+instituteName+".txt");
+			addData();
 		}
 
 //		public static void main(String[] args){
@@ -213,6 +220,7 @@ public class LibraryImpl extends LibraryPOA implements Runnable {
 					//Create servant and register it with ORB
 					//Obtain a reference
 					LibraryImpl libraryImpl = new LibraryImpl();
+					//libraryImpl.addData();
 //					libraryImpl.setORB(orb);
 //					
 //					//get orb reference from the servant
@@ -259,7 +267,7 @@ public class LibraryImpl extends LibraryPOA implements Runnable {
 					//Initialize the ORB 
 					PrintWriter file = null;
 					try {
-						file = new PrintWriter(instituteName+".txt");
+						file = new PrintWriter(".\\Servers\\"+instituteName+".txt");
 					} catch (FileNotFoundException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
@@ -341,7 +349,7 @@ public class LibraryImpl extends LibraryPOA implements Runnable {
 				}
 				objNewStudent.add(objStudent);
 				
-				logger.info("New User added to the library with username as : "+objStudent.getUserName());
+				//logger.info("New User added to the library with username as : "+objStudent.getUserName());
 				
 			}
 
@@ -477,6 +485,27 @@ public class LibraryImpl extends LibraryPOA implements Runnable {
 		public String getNonReturners(String AdminUsername, String AdminPassword,String InstitutionName, int NumDays) 
 		{
 			String response = null;
+			response += GetNonReturnersByServer(NumDays);
+			String[] args = null;
+			
+			for(int i =0;i<LibraryServers.length;i++)
+			{
+				if(this.instituteName!=LibraryServers[i])
+				{
+					try 
+					{
+						Library libraryServer = getServerObject(args, LibraryServers[i]);
+						response += libraryServer.GetNonReturnersByServer(NumDays);
+					} 
+					catch (Exception e) 
+					{
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+			}
+		
+			
 //			if(AdminUsername.equalsIgnoreCase("admin")&&AdminPassword.equals("admin"))
 //			{
 //				response += GetNonReturnersByServer(NumDays);
@@ -517,8 +546,9 @@ public class LibraryImpl extends LibraryPOA implements Runnable {
 //				System.out.println("Invalid Login");
 			return response;
 		}
-
-		private String GetNonReturnersByServer(int NumDays)
+		
+		@Override
+		public String GetNonReturnersByServer(int NumDays)
 		{
 			StringBuilder sbStudentList = new StringBuilder();
 			sbStudentList.append(instituteName+": \n");
@@ -592,7 +622,16 @@ public class LibraryImpl extends LibraryPOA implements Runnable {
 			// TODO Auto-generated method stub
 			return false;
 		}
-
-	
+		
+		public Library getServerObject(String[] args, String name) throws Exception 
+		{
+			ORB orb = ORB.init(args, null);
+			BufferedReader br = new BufferedReader(new FileReader(".\\Servers\\"+name+".txt"));
+			String ior = br.readLine();
+			br.close();
+			
+			org.omg.CORBA.Object o = orb.string_to_object(ior);
+			return LibraryHelper.narrow(o);		
+		}	
 
 }

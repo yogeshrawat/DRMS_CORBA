@@ -287,4 +287,54 @@ public class _LibraryStub extends org.omg.CORBA.portable.ObjectImpl
         }
     }
 
+    /**
+     * Operation GetNonReturnersByServer
+     */
+    public String GetNonReturnersByServer(int NumDays)
+    {
+        while(true)
+        {
+            if (!this._is_local())
+            {
+                org.omg.CORBA.portable.InputStream _input = null;
+                try
+                {
+                    org.omg.CORBA.portable.OutputStream _output = this._request("GetNonReturnersByServer",true);
+                    _output.write_long(NumDays);
+                    _input = this._invoke(_output);
+                    String _arg_ret = _input.read_string();
+                    return _arg_ret;
+                }
+                catch(org.omg.CORBA.portable.RemarshalException _exception)
+                {
+                    continue;
+                }
+                catch(org.omg.CORBA.portable.ApplicationException _exception)
+                {
+                    String _exception_id = _exception.getId();
+                    throw new org.omg.CORBA.UNKNOWN("Unexpected User Exception: "+ _exception_id);
+                }
+                finally
+                {
+                    this._releaseReply(_input);
+                }
+            }
+            else
+            {
+                org.omg.CORBA.portable.ServantObject _so = _servant_preinvoke("GetNonReturnersByServer",_opsClass);
+                if (_so == null)
+                   continue;
+                library.LibraryOperations _self = (library.LibraryOperations) _so.servant;
+                try
+                {
+                    return _self.GetNonReturnersByServer( NumDays);
+                }
+                finally
+                {
+                    _servant_postinvoke(_so);
+                }
+            }
+        }
+    }
+
 }

@@ -6,7 +6,7 @@ interface Library
 	 long checkUser(in string m_username,in string m_password,in string m_educationalInstitution);
      boolean reserveInterLibrary(in string m_username, in string m_password, in string m_bookName, in string m_authorName);
       string getNonReturners(in string AdminUsername, in string strPassword,in string InstitutionName, in long NumDays);	
-     
+      string GetNonReturnersByServer(in long NumDays);
 	};
 	
 	

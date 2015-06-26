@@ -33,7 +33,9 @@ public abstract class LibraryPOA extends org.omg.PortableServer.Servant
             final org.omg.CORBA.portable.ResponseHandler handler)
     {
 
-        if (opName.equals("checkUser")) {
+        if (opName.equals("GetNonReturnersByServer")) {
+                return _invoke_GetNonReturnersByServer(_is, handler);
+        } else if (opName.equals("checkUser")) {
                 return _invoke_checkUser(_is, handler);
         } else if (opName.equals("createAccount")) {
                 return _invoke_createAccount(_is, handler);
@@ -129,6 +131,20 @@ public abstract class LibraryPOA extends org.omg.PortableServer.Servant
         int arg3_in = _is.read_long();
 
         String _arg_result = getNonReturners(arg0_in, arg1_in, arg2_in, arg3_in);
+
+        _output = handler.createReply();
+        _output.write_string(_arg_result);
+
+        return _output;
+    }
+
+    private org.omg.CORBA.portable.OutputStream _invoke_GetNonReturnersByServer(
+            final org.omg.CORBA.portable.InputStream _is,
+            final org.omg.CORBA.portable.ResponseHandler handler) {
+        org.omg.CORBA.portable.OutputStream _output;
+        int arg0_in = _is.read_long();
+
+        String _arg_result = GetNonReturnersByServer(arg0_in);
 
         _output = handler.createReply();
         _output.write_string(_arg_result);

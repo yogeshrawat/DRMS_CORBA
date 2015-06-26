@@ -23,7 +23,7 @@ public class AdminClient extends Client {
 	public Library InitializeServer(String[] args, String name) throws Exception 
 	{
 		ORB orb = ORB.init(args, null);
-		BufferedReader br = new BufferedReader(new FileReader(".\\logs\\"+name+".txt"));
+		BufferedReader br = new BufferedReader(new FileReader(".\\Servers\\"+name+".txt"));
 		String ior = br.readLine();
 		br.close();
 		

@@ -32,4 +32,9 @@ public interface LibraryOperations
      */
     public String getNonReturners(String AdminUsername, String strPassword, String InstitutionName, int NumDays);
 
+    /**
+     * Operation GetNonReturnersByServer
+     */
+    public String GetNonReturnersByServer(int NumDays);
+
 }
