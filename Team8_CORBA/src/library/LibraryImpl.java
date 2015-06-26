@@ -329,15 +329,19 @@ public class LibraryImpl extends LibraryPOA implements Runnable {
 			objStudent.setPhoneNumber(strPhoneNumber);
 			
 			//Add student to HashTable 'tableStudents' with Lock
-			if(tableStudents.get(strUsername.charAt(0)) != null){
-			synchronized(tableStudents.get(strUsername.charAt(0))) {
+			if(tableStudents.get(strUsername.charAt(0)) != null)
+			{
+			synchronized(tableStudents.get(strUsername.charAt(0))) 
+			{
 				ArrayList<Student> objNewStudent = tableStudents.get(strUsername.charAt(0));
 				if(objNewStudent == null) {
 					objNewStudent = new ArrayList<Student>();
-					tableStudents.put(strUsername.charAt(0), objNewStudent);
 				}
-				objNewStudent.add(objStudent);
+					objNewStudent.add(objStudent);
+					tableStudents.put(strUsername.charAt(0), objNewStudent);
 				
+				
+				System.out.println("Student "+objStudent.getUserName()+" added succesfully");
 				logger.info("New User added to the library with username as : "+objStudent.getUserName());
 			}
 			}
@@ -345,9 +349,11 @@ public class LibraryImpl extends LibraryPOA implements Runnable {
 				ArrayList<Student> objNewStudent = tableStudents.get(strUsername.charAt(0));
 				if(objNewStudent == null) {
 					objNewStudent = new ArrayList<Student>();
-					tableStudents.put(strUsername.charAt(0), objNewStudent);
 				}
-				objNewStudent.add(objStudent);
+					objNewStudent.add(objStudent);
+					tableStudents.put(strUsername.charAt(0), objNewStudent);
+				
+				
 				
 				//logger.info("New User added to the library with username as : "+objStudent.getUserName());
 				
