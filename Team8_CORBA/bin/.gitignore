@@ -1,7 +1,4 @@
-/admin.idl
-/student.idl
-/admin/
-/student/
-/library.idl
-/library/
+/NonReturners.txt
+/Utility/
 /corba/
+/library/
