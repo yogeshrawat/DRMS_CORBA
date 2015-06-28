@@ -107,7 +107,7 @@ public class LibraryServer extends LibraryPOA implements Runnable {
 	public static void main(String[] args){
 
 		// TODO Auto-generated method stub
-		
+
 		LibraryServer Server1 = new LibraryServer("Concordia",50001);
 		//Thread Server1Thread = new Thread(Server1);
 		LibraryServer Server2 = new LibraryServer("Ottawa",50002);
@@ -116,16 +116,16 @@ public class LibraryServer extends LibraryPOA implements Runnable {
 		//Thread Server3Thread = new Thread(Server3);
 
 
-//		Server1Thread.start();
-//		System.out.println("Concordia server up and running!");
-//		Server2Thread.start();
-//		System.out.println("Ottawa server up and running!");
-//		Server3Thread.start();
-//		System.out.println("Waterloo server up and running!");
+		//		Server1Thread.start();
+		//		System.out.println("Concordia server up and running!");
+		//		Server2Thread.start();
+		//		System.out.println("Ottawa server up and running!");
+		//		Server3Thread.start();
+		//		System.out.println("Waterloo server up and running!");
 
-//		addData(Server1);
-//		addData(Server2);
-//		addData(Server3);
+		//		addData(Server1);
+		//		addData(Server2);
+		//		addData(Server3);
 
 		LibraryServers = new ArrayList<LibraryServer>();
 		LibraryServers.add(Server1);
@@ -143,53 +143,53 @@ public class LibraryServer extends LibraryPOA implements Runnable {
 
 			//Server1Thread.start();
 
-		//Initialize ORB 
-				try {
-					rootPOA = POAHelper.narrow(orb.resolve_initial_references("RootPOA"));						
-				} catch (InvalidName e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				try {
-					rootPOA.the_POAManager().activate();
-				} catch (AdapterInactive e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				//Create servant and register it with ORB
-				//Obtain a reference
-				//LibraryImpl libraryImpl = new LibraryImpl();
-				byte[] id = null;					
-				try {
-					id = rootPOA.activate_object(libraryServer);
-				} catch (ServantAlreadyActive | WrongPolicy e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				org.omg.CORBA.Object ref = null;
-				try {
-					ref = rootPOA.id_to_reference(id);
-				} catch (ObjectNotActive | WrongPolicy e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				
-				//Translate to ior and write it to a file
-				String ior = orb.object_to_string(ref);
-				System.out.println(ior);
-				
-				//Initialize the ORB 
-				PrintWriter file = null;
-				try {
-					file = new PrintWriter(".\\Servers\\"+libraryServer.instituteName+".txt");
-				} catch (FileNotFoundException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				file.println(ior);
-				file.close();
+			//Initialize ORB 
+			try {
+				rootPOA = POAHelper.narrow(orb.resolve_initial_references("RootPOA"));						
+			} catch (InvalidName e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			try {
+				rootPOA.the_POAManager().activate();
+			} catch (AdapterInactive e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			//Create servant and register it with ORB
+			//Obtain a reference
+			//LibraryImpl libraryImpl = new LibraryImpl();
+			byte[] id = null;					
+			try {
+				id = rootPOA.activate_object(libraryServer);
+			} catch (ServantAlreadyActive | WrongPolicy e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			org.omg.CORBA.Object ref = null;
+			try {
+				ref = rootPOA.id_to_reference(id);
+			} catch (ObjectNotActive | WrongPolicy e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 
-				
+			//Translate to ior and write it to a file
+			String ior = orb.object_to_string(ref);
+			System.out.println(ior);
+
+			//Initialize the ORB 
+			PrintWriter file = null;
+			try {
+				file = new PrintWriter(".\\Servers\\"+libraryServer.instituteName+".txt");
+			} catch (FileNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			file.println(ior);
+			file.close();
+
+
 		}
 
 		try {
@@ -214,38 +214,79 @@ public class LibraryServer extends LibraryPOA implements Runnable {
 
 	}
 
-	
+
 
 	private static int i=1;
 	public void addData()
-	{		
-		for(int j=1; j<5; j++) { 
-			Book book = new Book("Book"+j, "Author"+j, 10);
+	{	
+		if(this.instituteName == "Concordia")
+		{
+			for(int j=1; j<3; j++) { 
+
+				Book book = new Book("Book"+j, "Author"+j, 10);
+				this.tableBooks.put(book.getName(), book);
+			}
+		}
+		else{
+			for(int j=2; j<3; j++) { 
+				Book book = new Book("Book"+j, "Author"+j, 0);
+				this.tableBooks.put(book.getName(), book);
+			}
+			Book book = new Book("Book1", "Author1", 10);
 			this.tableBooks.put(book.getName(), book);
 		}
-		
+
+
 		ArrayList<Student> s = new ArrayList<Student>();
 		for(char i = 'A'; i <= 'Z' ; i++)
 		{
 			this.tableStudents.putIfAbsent(i, s);
 		}
 
-		this.createAccount("Student"+i, "L"+i, "Student"+i+"@test.com", "1234567890", "Student"+i, "abc123", this.instituteName);
-		this.createAccount("yogesh", "rawat","yogesh@gmail.com","5145156743","yogesh","yogesh",this.instituteName);
-		this.createAccount("aron", "engineer","aron@gmail.com","5145156743","aron123","aron123",this.instituteName);
-		this.createAccount("ashish", "guhe","ashish@gmail.com","5145656743","ashish","ashish",this.instituteName);
-		
-		this.reserveBook("yogesh", "yogesh", "Book1", "Author1");
-		ArrayList<Student> list = this.tableStudents.get('y');
-		
+		if(this.instituteName == "Concordia")
+		{
+			this.createAccount("yogesh", "rawat","yogesh@gmail.com","5145156743","yogesh","yogesh",this.instituteName);
+			this.reserveBook("yogesh", "yogesh", "Book1", "Author1");
+			ArrayList<Student> list = this.tableStudents.get('y');
+
+			Book Book1 = new Book("Book2","Author2",8);
+			for(Student student : list)
+			{
+				if(student.getUserName().equals("yogesh"))
+				{
+					student.getReservedBooks().put(Book1, 2);
+				}
+			}
+		}
+
+		if(this.instituteName == "Ottawa"){
+			this.createAccount("aron", "engineer","aron@gmail.com","5145156743","aron123","aron123",this.instituteName);
+		ArrayList<Student> list = this.tableStudents.get('a');
+
 		Book Book1 = new Book("Book1","Author1",8);
 		for(Student student : list)
 		{
-			if(student.getUserName().equals("yogesh"))
+			if(student.getUserName().equals("aron"))
 			{
 				student.getReservedBooks().put(Book1, 2);
 			}
 		}
+		}
+
+		if(this.instituteName == "Waterloo"){
+			this.createAccount("ashish", "guhe","ashish@gmail.com","5145656743","ashish","ashish",this.instituteName);
+		ArrayList<Student> list = this.tableStudents.get('a');
+
+		Book Book1 = new Book("Book1","Author1",8);
+		for(Student student : list)
+		{
+			if(student.getUserName().equals("ashish"))
+			{
+				student.getReservedBooks().put(Book1, 2);
+			}
+		}
+		}
+
 	}
 
 	public void run()
@@ -253,8 +294,8 @@ public class LibraryServer extends LibraryPOA implements Runnable {
 
 		this.socket = new ServerThread(this);
 		socket.start();	
-				
-			
+
+
 	}
 
 	@Override
@@ -266,39 +307,39 @@ public class LibraryServer extends LibraryPOA implements Runnable {
 		}
 		else 
 		{
-		Student objStudent = new Student(strUsername,strPassword,strEducationalInstitution);
-		objStudent.setFirstName(strFirstName);
-		objStudent.setLastName(strLastName);
-		objStudent.setEmailAddress(strEmailAddress);
-		objStudent.setPhoneNumber(strPhoneNumber);
-		
-		//Add student to HashTable 'tableStudents' with Lock
-		if(tableStudents.get(strUsername.charAt(0)) != null){
-		synchronized(tableStudents.get(strUsername.charAt(0))) {
-			ArrayList<Student> objNewStudent = tableStudents.get(strUsername.charAt(0));
-			if(objNewStudent == null) {
-				objNewStudent = new ArrayList<Student>();
-				tableStudents.put(strUsername.charAt(0), objNewStudent);
-			}
-			objNewStudent.add(objStudent);
-			
-			logger.info("New User added to the library with username as : "+objStudent.getUserName());
-		}
-		}
-		else {
-			ArrayList<Student> objNewStudent = tableStudents.get(strUsername.charAt(0));
-			if(objNewStudent == null) {
-				objNewStudent = new ArrayList<Student>();
-				tableStudents.put(strUsername.charAt(0), objNewStudent);
-			}
-			objNewStudent.add(objStudent);
-			
-			logger.info("New User added to the library with username as : "+objStudent.getUserName());
-			
-		}
+			Student objStudent = new Student(strUsername,strPassword,strEducationalInstitution);
+			objStudent.setFirstName(strFirstName);
+			objStudent.setLastName(strLastName);
+			objStudent.setEmailAddress(strEmailAddress);
+			objStudent.setPhoneNumber(strPhoneNumber);
 
-		
-		return true;
+			//Add student to HashTable 'tableStudents' with Lock
+			if(tableStudents.get(strUsername.charAt(0)) != null){
+				synchronized(tableStudents.get(strUsername.charAt(0))) {
+					ArrayList<Student> objNewStudent = tableStudents.get(strUsername.charAt(0));
+					if(objNewStudent == null) {
+						objNewStudent = new ArrayList<Student>();
+						tableStudents.put(strUsername.charAt(0), objNewStudent);
+					}
+					objNewStudent.add(objStudent);
+
+					logger.info("New User added to the library with username as : "+objStudent.getUserName());
+				}
+			}
+			else {
+				ArrayList<Student> objNewStudent = tableStudents.get(strUsername.charAt(0));
+				if(objNewStudent == null) {
+					objNewStudent = new ArrayList<Student>();
+					tableStudents.put(strUsername.charAt(0), objNewStudent);
+				}
+				objNewStudent.add(objStudent);
+
+				logger.info("New User added to the library with username as : "+objStudent.getUserName());
+
+			}
+
+
+			return true;
 		}
 	}
 
@@ -339,8 +380,8 @@ public class LibraryServer extends LibraryPOA implements Runnable {
 						System.out.println("Required book not found");	
 					}
 				}
-				
-				
+
+
 			}
 			else
 			{
@@ -354,28 +395,28 @@ public class LibraryServer extends LibraryPOA implements Runnable {
 		}
 		return success;
 	}
-	
-//	@Override
-//	public boolean reserveInterLibrary(String m_username, String m_password, String m_bookName, String m_authorName)
-//	{
-//		for(int i =0;i<LibraryServers.length;i++)
-//		{
-//			if(this.instituteName!=LibraryServers[i])
-//			{
-//				try 
-//				{
-//					LibraryServer libraryServer = (LibraryServer) getServerObject(args, LibraryServers[i]);
-//				}
-//				catch(Exception ex)
-//				{
-//					ex.printStackTrace();
-//				}
-//								
-//			}
-//		}
-//	}
-	
-	
+
+	//	@Override
+	//	public boolean reserveInterLibrary(String m_username, String m_password, String m_bookName, String m_authorName)
+	//	{
+	//		for(int i =0;i<LibraryServers.length;i++)
+	//		{
+	//			if(this.instituteName!=LibraryServers[i])
+	//			{
+	//				try 
+	//				{
+	//					LibraryServer libraryServer = (LibraryServer) getServerObject(args, LibraryServers[i]);
+	//				}
+	//				catch(Exception ex)
+	//				{
+	//					ex.printStackTrace();
+	//				}
+	//								
+	//			}
+	//		}
+	//	}
+
+
 	public boolean isExist(String strUsername, String strEducationalInstitution) 
 	{
 		// TODO Auto-generated method stub
@@ -430,199 +471,148 @@ public class LibraryServer extends LibraryPOA implements Runnable {
 		return login;
 	}
 
-	//@Override
-	//	public String searchBook(String strBookName) throws RemoteException {
-	//		// TODO Auto-generated method stub
-	//		
-	//		
-	//		return null;
-	//	}
+	
 
-//	public void exportServer() throws Exception
-//	{
-//		Remote objremote1 = UnicastRemoteObject.exportObject(this,2020);
-//		Registry registry1 = LocateRegistry.createRegistry(2020);
-//		registry1.bind("Institution", objremote1);
-//	}
+	@Override
+	public String getNonReturners(String AdminUsername, String AdminPassword,String InstitutionName, int NumDays) 
+	{
+		String response = null;
+		response += GetNonReturnersByServer(NumDays);
+		String[] args = null;
 
-		@Override
-		public String getNonReturners(String AdminUsername, String AdminPassword,String InstitutionName, int NumDays) 
+		//for(int i =0;i<LibraryServers.length;i++)
+		for(LibraryServer libraryServer : LibraryServers)
 		{
-			String response = null;
-			response += GetNonReturnersByServer(NumDays);
-			String[] args = null;
-			
-			//for(int i =0;i<LibraryServers.length;i++)
-			for(LibraryServer libraryServer : LibraryServers)
+			if(this.instituteName!=libraryServer.instituteName)
 			{
-				if(this.instituteName!=libraryServer.instituteName)
+				try 
 				{
-					try 
+					//LibraryServer libraryServer = (LibraryServer) getServerObject(args, LibraryServers[i]);
+					DatagramSocket socket = null;
+					try
 					{
-						//LibraryServer libraryServer = (LibraryServer) getServerObject(args, LibraryServers[i]);
-						DatagramSocket socket = null;
-						try
-						{
-							socket = new DatagramSocket();
-							byte[] msgOut = ("Days:"+NumDays).getBytes();
-							InetAddress host = InetAddress.getByName("localhost");
-							int ServerPort = libraryServer.getUDPPort();
-							DatagramPacket request = new DatagramPacket(msgOut, ("Days:"+NumDays).length(),host,ServerPort);
-							socket.send(request);
+						socket = new DatagramSocket();
+						byte[] msgOut = ("Days:"+NumDays).getBytes();
+						InetAddress host = InetAddress.getByName("localhost");
+						int ServerPort = libraryServer.getUDPPort();
+						DatagramPacket request = new DatagramPacket(msgOut, ("Days:"+NumDays).length(),host,ServerPort);
+						socket.send(request);
 
-							byte[] msgIn = new byte[10000];
-							DatagramPacket reply = new DatagramPacket(msgIn, msgIn.length);
-							socket.receive(reply);
-							response+=new String(reply.getData());
-						}
-						catch(Exception ex)
-						{
-							ex.printStackTrace();
-						}
-						finally
-						{
-							socket.close();
-						}
-
-	//					response += libraryServer.GetNonReturnersByServer(NumDays);
-					} 
-					catch (Exception e) 
-					{
-						// TODO Auto-generated catch block
-						e.printStackTrace();
+						byte[] msgIn = new byte[10000];
+						DatagramPacket reply = new DatagramPacket(msgIn, msgIn.length);
+						socket.receive(reply);
+						response+=new String(reply.getData());
 					}
+					catch(Exception ex)
+					{
+						ex.printStackTrace();
+					}
+					finally
+					{
+						socket.close();
+					}
+
+					//					response += libraryServer.GetNonReturnersByServer(NumDays);
+				} 
+				catch (Exception e) 
+				{
+					// TODO Auto-generated catch block
+					e.printStackTrace();
 				}
 			}
-		
-			
-//			if(AdminUsername.equalsIgnoreCase("admin")&&AdminPassword.equals("admin"))
-//			{
-//				response += GetNonReturnersByServer(NumDays);
-//				for(LibraryServer Server : LibraryServers)
-//				{
-//					synchronized(Server)
-//					{
-//						if(!Server.instituteName.equals(this.instituteName))
-//						{
-//							DatagramSocket socket = null;
-//							try
-//							{
-//								socket = new DatagramSocket();
-//								byte[] msgOut = (""+NumDays).getBytes();
-//								InetAddress host = InetAddress.getByName("localhost");
-//								int ServerPort = Server.getUDPPort();
-//								DatagramPacket request = new DatagramPacket(msgOut, (""+NumDays).length(),host,ServerPort);
-//								socket.send(request);
-//
-//								byte[] msgIn = new byte[10000];
-//								DatagramPacket reply = new DatagramPacket(msgIn, msgIn.length);
-//								socket.receive(reply);
-//								response+=new String(reply.getData());
-//							}
-//							catch(Exception ex)
-//							{
-//								ex.printStackTrace();
-//							}
-//							finally
-//							{
-//								socket.close();
-//							}
-//						}
-//					}
-//				}
-//			}
-//			else
-//				System.out.println("Invalid Login");
-			return response;
 		}
-	
-//	@Override
-//	private String GetNonReturnersByServer(int NumDays)
-//	{
-//		StringBuilder sbStudentList = new StringBuilder();
-//		sbStudentList.append(instituteName+": \n");
-//		// TODO Auto-generated method stub
-//		Iterator<?> it = tableStudents.entrySet().iterator();
-//		while(it.hasNext())
-//		{
-//			Map.Entry pair = (Map.Entry)it.next();
-//			ArrayList<Student> listStudent = (ArrayList<Student>) pair.getValue();
-//			if(!listStudent.isEmpty())
-//			{					
-//				for(Student objStudent : listStudent)
-//				{
-//					if(!objStudent.getReservedBooks().isEmpty())
-//					{
-//						Iterator<?> innerIterator = objStudent.getReservedBooks().entrySet().iterator();
-//						while(innerIterator.hasNext())
-//						{
-//							Map.Entry innerPair = (Map.Entry)innerIterator.next();
-//
-//							if((int)innerPair.getValue()<=(14-NumDays))
-//							{
-//								sbStudentList.append(objStudent.getFirstName() +" "+objStudent.getLastName()+" "+objStudent.getPhoneNumber()+"\n");
-//							}
-//						}
-//					}
-//				}
-//			}
-//		}
-//		return sbStudentList.toString();
-//	}
 
-		@Override
-		public String GetNonReturnersByServer(int NumDays)
+
+		return response;
+	}
+
+	//	@Override
+	//	private String GetNonReturnersByServer(int NumDays)
+	//	{
+	//		StringBuilder sbStudentList = new StringBuilder();
+	//		sbStudentList.append(instituteName+": \n");
+	//		// TODO Auto-generated method stub
+	//		Iterator<?> it = tableStudents.entrySet().iterator();
+	//		while(it.hasNext())
+	//		{
+	//			Map.Entry pair = (Map.Entry)it.next();
+	//			ArrayList<Student> listStudent = (ArrayList<Student>) pair.getValue();
+	//			if(!listStudent.isEmpty())
+	//			{					
+	//				for(Student objStudent : listStudent)
+	//				{
+	//					if(!objStudent.getReservedBooks().isEmpty())
+	//					{
+	//						Iterator<?> innerIterator = objStudent.getReservedBooks().entrySet().iterator();
+	//						while(innerIterator.hasNext())
+	//						{
+	//							Map.Entry innerPair = (Map.Entry)innerIterator.next();
+	//
+	//							if((int)innerPair.getValue()<=(14-NumDays))
+	//							{
+	//								sbStudentList.append(objStudent.getFirstName() +" "+objStudent.getLastName()+" "+objStudent.getPhoneNumber()+"\n");
+	//							}
+	//						}
+	//					}
+	//				}
+	//			}
+	//		}
+	//		return sbStudentList.toString();
+	//	}
+
+	@Override
+	public String GetNonReturnersByServer(int NumDays)
+	{
+		StringBuilder sbStudentList = new StringBuilder();
+		sbStudentList.append(instituteName+": \n");
+		// TODO Auto-generated method stub
+		Iterator<?> it = tableStudents.entrySet().iterator();
+		while(it.hasNext())
 		{
-			StringBuilder sbStudentList = new StringBuilder();
-			sbStudentList.append(instituteName+": \n");
-			// TODO Auto-generated method stub
-			Iterator<?> it = tableStudents.entrySet().iterator();
-			while(it.hasNext())
-			{
-				Map.Entry pair = (Map.Entry)it.next();
-				ArrayList<Student> listStudent = (ArrayList<Student>) pair.getValue();
-				if(!listStudent.isEmpty())
-				{					
-					for(Student objStudent : listStudent)
+			Map.Entry pair = (Map.Entry)it.next();
+			ArrayList<Student> listStudent = (ArrayList<Student>) pair.getValue();
+			if(!listStudent.isEmpty())
+			{					
+				for(Student objStudent : listStudent)
+				{
+					if(!objStudent.getReservedBooks().isEmpty())
 					{
-						if(!objStudent.getReservedBooks().isEmpty())
+						Iterator<?> innerIterator = objStudent.getReservedBooks().entrySet().iterator();
+						while(innerIterator.hasNext())
 						{
-							Iterator<?> innerIterator = objStudent.getReservedBooks().entrySet().iterator();
-							while(innerIterator.hasNext())
-							{
-								Map.Entry innerPair = (Map.Entry)innerIterator.next();
+							Map.Entry innerPair = (Map.Entry)innerIterator.next();
 
-								if((int)innerPair.getValue()<=(14-NumDays))
-								{
-									sbStudentList.append(objStudent.getFirstName() +" "+objStudent.getLastName()+" "+objStudent.getPhoneNumber()+"\n");
-								}
+							if((int)innerPair.getValue()<=(14-NumDays))
+							{
+								sbStudentList.append(objStudent.getFirstName() +" "+objStudent.getLastName()+" "+objStudent.getPhoneNumber()+"\n");
 							}
 						}
 					}
 				}
 			}
-			return sbStudentList.toString();
 		}
+		return sbStudentList.toString();
+	}
 
-		
+
 	private Student getStudent(String strUserName)
 	{
 		Student objStudent = null;
 		ArrayList<Student> listStudent = tableStudents.get(strUserName.charAt(0));
 		if(tableStudents.get(strUserName.charAt(0)) != null){
-		synchronized(tableStudents.get(strUserName.charAt(0)))
-		{
-			if(listStudent.size()>0)
+			synchronized(tableStudents.get(strUserName.charAt(0)))
 			{
-				for(Student student : listStudent)
+				if(listStudent.size()>0)
 				{
-					if(student.getUserName().equals(strUserName))
+					for(Student student : listStudent)
 					{
-						objStudent = student;
+						if(student.getUserName().equals(strUserName))
+						{
+							objStudent = student;
+						}
 					}
 				}
 			}
-		}
 		}
 		else {
 			if(listStudent.size()>0)
@@ -635,7 +625,7 @@ public class LibraryServer extends LibraryPOA implements Runnable {
 					}
 				}
 			}
-			
+
 		}
 		return objStudent;
 	}
@@ -678,7 +668,7 @@ public class LibraryServer extends LibraryPOA implements Runnable {
 						socket.close();
 					}
 
-//					response += libraryServer.GetNonReturnersByServer(NumDays);
+					//					response += libraryServer.GetNonReturnersByServer(NumDays);
 				} 
 				catch (Exception e) 
 				{
@@ -687,17 +677,17 @@ public class LibraryServer extends LibraryPOA implements Runnable {
 				}
 			}
 		}
-		
+
 		return false;
 	}
-	
+
 	public Library getServerObject(String[] args, String name) throws Exception 
 	{
 		ORB orb = ORB.init(args, null);
 		BufferedReader br = new BufferedReader(new FileReader(".\\Servers\\"+name+".txt"));
 		String ior = br.readLine();
 		br.close();
-		
+
 		org.omg.CORBA.Object o = orb.string_to_object(ior);
 		return LibraryHelper.narrow(o);		
 	}	
