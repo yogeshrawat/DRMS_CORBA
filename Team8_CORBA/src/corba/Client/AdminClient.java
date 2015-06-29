@@ -1,5 +1,6 @@
 package corba.Client;
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -116,10 +117,16 @@ public class AdminClient extends Client {
 					objClient.logger.info("Non Returner retrieved on :"+ System.currentTimeMillis());
 					String result = "";
 					result = objServer.getNonReturners(userName, password, objServer.toString(), numOfDays);
-					File nonReturners=new File(".\\src\\NonReturners.txt");
-					FileWriter fw=new FileWriter(nonReturners);
-					fw.write(result);
-					System.out.println("File Written");
+					File directory=new File("AdminOperations");
+					if(!directory.exists()){
+						directory.mkdir();
+					}
+					File nonReturners=new File(".\\AdminOperations\\NonReturnersFile.txt");
+					BufferedWriter bw=new BufferedWriter(new FileWriter(nonReturners));
+					bw.write(result.trim());
+					bw.flush();
+					bw.close();
+					System.out.println("Nonreturners File Written");
 					showMenu();
 					break;
 				case 2:

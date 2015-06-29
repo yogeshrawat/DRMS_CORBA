@@ -503,7 +503,7 @@ public class LibraryServer extends LibraryPOA implements Runnable {
 	@Override
 	public String getNonReturners(String AdminUsername, String AdminPassword,String InstitutionName, int NumDays) 
 	{
-		String response = null;
+		String response = "";
 		response += GetNonReturnersByServer(NumDays);
 		String[] args = null;
 
@@ -559,7 +559,7 @@ public class LibraryServer extends LibraryPOA implements Runnable {
 	public String GetNonReturnersByServer(int NumDays)
 	{
 		StringBuilder sbStudentList = new StringBuilder();
-		sbStudentList.append(instituteName+": \n");
+		sbStudentList.append(instituteName+":: \n");
 		// TODO Auto-generated method stub
 		Iterator<?> it = tableStudents.entrySet().iterator();
 		while(it.hasNext())
@@ -579,7 +579,7 @@ public class LibraryServer extends LibraryPOA implements Runnable {
 
 							if((int)innerPair.getValue()<=(14-NumDays))
 							{
-								sbStudentList.append(objStudent.getFirstName() +" "+objStudent.getLastName()+" "+objStudent.getPhoneNumber()+"\n");
+								sbStudentList.append(objStudent.getFirstName() +" "+objStudent.getLastName()+"-"+objStudent.getPhoneNumber()+"\n");
 							}
 						}
 					}
