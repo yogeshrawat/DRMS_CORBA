@@ -126,7 +126,7 @@ public class AdminClient extends Client {
 					bw.write(result.trim());
 					bw.flush();
 					bw.close();
-					System.out.println("Nonreturners File Written");
+					System.out.println("NonReturners File Written");
 					showMenu();
 					break;
 				case 2:
