@@ -86,7 +86,8 @@ public class StudentClient extends Client{
 		System.out.println("Please select an option");
 		System.out.println("1. Create An Account.");
 		System.out.println("2. Reserve a Book");
-		System.out.println("3. Exit");
+		System.out.println("3. Reserve a Book InterLibraray");		
+		System.out.println("4. Exit");
 	}
 
 	public static void main(String[] args)
@@ -206,19 +207,36 @@ public class StudentClient extends Client{
 						objClient.logger.info("Book reserved successfully for user "+userName);
 					}
 					else{
-						if(objServer.reserveInterLibrary(userName, password, bookName, authorName))	
-						{
-							objClient.setLogger(userName, ".\\logs\\students\\"+userName+".txt");
-							objClient.logger.info("Interlibrary : Book reserved successfully for user "+userName);
-						}
-						else{
 						objClient.setLogger(userName, ".\\logs\\students\\"+userName+".txt");
 						objClient.logger.info("Book could not be reserved for : "+userName);
 						}
 
-					}					
+									
 					break;
 				case 3: 
+					System.out.println("User Name: ");
+					ValidateInput v3 = new ValidateInput();
+					userName = v3.validateUserName(keyboard.nextLine().toString());
+					System.out.println("Password: ");
+					password = v3.validate(keyboard.nextLine().toString());
+					System.out.println("Book Name: ");
+					bookName = objClient.InputStringValidation(keyboard);
+					System.out.println("Author: ");
+					authorName = objClient.InputStringValidation(keyboard);
+					institution= getEducationalInstituteFromUser();
+					//objClient.InitializeServer();
+					objServer = objClient.ServerValidation(institution);
+					if(objServer.reserveInterLibrary(userName, password, bookName, authorName))	
+					{
+						objClient.setLogger(userName, ".\\logs\\students\\"+userName+".txt");
+						objClient.logger.info("Interlibrary : Book reserved successfully for user "+userName);
+					}
+					else{
+						objClient.setLogger(userName, ".\\logs\\students\\"+userName+".txt");
+						objClient.logger.info("Book could not be reserved for : "+userName);
+						}
+					break;
+				case 4: 
 					System.out.println("Thank You \n Have a nice day!");
 					keyboard.close();
 					System.exit(0);

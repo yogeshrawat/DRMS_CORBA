@@ -261,30 +261,30 @@ public class LibraryServer extends LibraryPOA implements Runnable {
 
 		if(this.instituteName == "Ottawa"){
 			this.createAccount("aron", "engineer","aron@gmail.com","5145156743","aron123","aron123",this.instituteName);
-		ArrayList<Student> list = this.tableStudents.get('a');
+			ArrayList<Student> list = this.tableStudents.get('a');
 
-		Book Book1 = new Book("Book1","Author1",8);
-		for(Student student : list)
-		{
-			if(student.getUserName().equals("aron"))
+			Book Book1 = new Book("Book1","Author1",8);
+			for(Student student : list)
 			{
-				student.getReservedBooks().put(Book1, 2);
+				if(student.getUserName().equals("aron"))
+				{
+					student.getReservedBooks().put(Book1, 2);
+				}
 			}
-		}
 		}
 
 		if(this.instituteName == "Waterloo"){
 			this.createAccount("ashish", "guhe","ashish@gmail.com","5145656743","ashish","ashish",this.instituteName);
-		ArrayList<Student> list = this.tableStudents.get('a');
+			ArrayList<Student> list = this.tableStudents.get('a');
 
-		Book Book1 = new Book("Book1","Author1",8);
-		for(Student student : list)
-		{
-			if(student.getUserName().equals("ashish"))
+			Book Book1 = new Book("Book1","Author1",8);
+			for(Student student : list)
 			{
-				student.getReservedBooks().put(Book1, 2);
+				if(student.getUserName().equals("ashish"))
+				{
+					student.getReservedBooks().put(Book1, 2);
+				}
 			}
-		}
 		}
 
 	}
@@ -355,32 +355,20 @@ public class LibraryServer extends LibraryPOA implements Runnable {
 			iLoginResult = checkUser(strUsername, strPassword, objStudent.getInst());
 			if(iLoginResult==1)
 			{
-				synchronized(tableBooks)
+				if(isBookAvailable(strBookName))
 				{
 					Book objBook = tableBooks.get(strBookName);
-					if(objBook!= null)
-					{
-						//reserve the book
-						if(objBook.getNumOfCopy()>0)
-						{
-							objBook.setNumOfCopy(objBook.getNumOfCopy()-1);//Decrement available copies
-							(objStudent.getReservedBooks()).put(objBook,14);//Add Book to Student's reserved list for 14 days
-							success = true;
-							logger.info(strUsername+": Reserved the book "+strBookName+"\n. Remaining copies of"+ strBookName+"is/are"+objBook.getNumOfCopy());
-							System.out.println(this.instituteName +" Library : "+strUsername+": Reserved the book "+strBookName+"\n. Remaining copies of "+ strBookName+" is/are "+objBook.getNumOfCopy());
+					objBook.setNumOfCopy(objBook.getNumOfCopy()-1);//Decrement available copies
+					(objStudent.getReservedBooks()).put(objBook,14);//Add Book to Student's reserved list for 14 days
+					success = true;
+					logger.info(strUsername+": Reserved the book "+strBookName+"\n. Remaining copies of"+ strBookName+"is/are"+objBook.getNumOfCopy());
+					System.out.println(this.instituteName +" Library : "+strUsername+": Reserved the book "+strBookName+"\n. Remaining copies of "+ strBookName+" is/are "+objBook.getNumOfCopy());
 
-						}
-						else
-						{
-							System.out.println("Required book not available currently");
-						}
-					}
-					else
-					{
-						System.out.println("Required book not found");	
-					}
 				}
-
+				else
+				{
+					System.out.println("Required book not available");	
+				}
 
 			}
 			else
@@ -393,29 +381,66 @@ public class LibraryServer extends LibraryPOA implements Runnable {
 		{
 			System.out.println("Student "+strUsername+ " does not exist!");
 		}
+
 		return success;
 	}
 
-	//	@Override
-	//	public boolean reserveInterLibrary(String m_username, String m_password, String m_bookName, String m_authorName)
-	//	{
-	//		for(int i =0;i<LibraryServers.length;i++)
-	//		{
-	//			if(this.instituteName!=LibraryServers[i])
-	//			{
-	//				try 
-	//				{
-	//					LibraryServer libraryServer = (LibraryServer) getServerObject(args, LibraryServers[i]);
-	//				}
-	//				catch(Exception ex)
-	//				{
-	//					ex.printStackTrace();
-	//				}
-	//								
-	//			}
-	//		}
-	//	}
+	public boolean grantBookInterServer(String strBookName)
+	{
+		boolean isAvailable=false;
+			System.out.println(strBookName);
+			//strBookName=strBookName.substring(1);
+		System.out.println("I am "+this.instituteName+". Grant book.");
+		Book objBook = tableBooks.get(strBookName);
+		if(objBook!= null)
+		{
+			//reserve the book
+			if(objBook.getNumOfCopy()>0)
+			{
+				objBook.setNumOfCopy(objBook.getNumOfCopy()-1);//Decrement available copies
+				isAvailable = true;
+			}
+		}
+		else
+		{
+			isAvailable = false;
+		}
+		return isAvailable;
+//		if(isBookAvailable(strBookName))
+//		{
+//			
+//			Book objBook = tableBooks.get(strBookName);
+//			objBook.setNumOfCopy(objBook.getNumOfCopy()-1);//Decrement available copies
+//			return true;
+//		}
+//		else
+//		{
+//			return false;
+//		}
+		//	Book objBook = tableBooks.get(strBookName);
+		//	objBook.setNumOfCopy(objBook.getNumOfCopy()-1);//Decrement available copies
+		//	(objStudent.getReservedBooks()).put(objBook,14);//Add Book to Student's reserved list for 14 days
+		//	success = true;
+		//	logger.info(strUsername+": Reserved the book "+strBookName+"\n. Remaining copies of"+ strBookName+"is/are"+objBook.getNumOfCopy());
+		//	System.out.println(this.instituteName +" Library : "+strUsername+": Reserved the book "+strBookName+"\n. Remaining copies of "+ strBookName+" is/are "+objBook.getNumOfCopy());
 
+	}
+
+	private boolean isBookAvailable(String strBookName)
+	{
+		System.out.println("I am "+this.instituteName+". isAvailable.");
+		boolean isAvailable=false;
+		Book objBook = tableBooks.get(strBookName);
+		if(objBook!= null)
+		{
+			//reserve the book
+			if(objBook.getNumOfCopy()>0)
+			{
+				isAvailable=true;
+			}
+		}
+		return isAvailable;
+	}
 
 	public boolean isExist(String strUsername, String strEducationalInstitution) 
 	{
@@ -471,7 +496,7 @@ public class LibraryServer extends LibraryPOA implements Runnable {
 		return login;
 	}
 
-	
+
 
 	@Override
 	public String getNonReturners(String AdminUsername, String AdminPassword,String InstitutionName, int NumDays) 
@@ -526,39 +551,7 @@ public class LibraryServer extends LibraryPOA implements Runnable {
 		return response;
 	}
 
-	//	@Override
-	//	private String GetNonReturnersByServer(int NumDays)
-	//	{
-	//		StringBuilder sbStudentList = new StringBuilder();
-	//		sbStudentList.append(instituteName+": \n");
-	//		// TODO Auto-generated method stub
-	//		Iterator<?> it = tableStudents.entrySet().iterator();
-	//		while(it.hasNext())
-	//		{
-	//			Map.Entry pair = (Map.Entry)it.next();
-	//			ArrayList<Student> listStudent = (ArrayList<Student>) pair.getValue();
-	//			if(!listStudent.isEmpty())
-	//			{					
-	//				for(Student objStudent : listStudent)
-	//				{
-	//					if(!objStudent.getReservedBooks().isEmpty())
-	//					{
-	//						Iterator<?> innerIterator = objStudent.getReservedBooks().entrySet().iterator();
-	//						while(innerIterator.hasNext())
-	//						{
-	//							Map.Entry innerPair = (Map.Entry)innerIterator.next();
-	//
-	//							if((int)innerPair.getValue()<=(14-NumDays))
-	//							{
-	//								sbStudentList.append(objStudent.getFirstName() +" "+objStudent.getLastName()+" "+objStudent.getPhoneNumber()+"\n");
-	//							}
-	//						}
-	//					}
-	//				}
-	//			}
-	//		}
-	//		return sbStudentList.toString();
-	//	}
+
 
 	@Override
 	public String GetNonReturnersByServer(int NumDays)
@@ -636,44 +629,70 @@ public class LibraryServer extends LibraryPOA implements Runnable {
 	{
 		String response = null;
 		String[] args = null;
-		// TODO Auto-generated method stub
-		for(LibraryServer libraryServer : LibraryServers)
+		if(isBookAvailable(m_bookName))
 		{
-			if(this.instituteName!=libraryServer.instituteName)
+			reserveBook(m_username, m_password, m_bookName, m_authorName);
+		}
+		else
+		{
+			// TODO Auto-generated method stub
+			for(LibraryServer libraryServer : LibraryServers)
 			{
-				try 
+				boolean bookAvailabe = false;
+				if(this.instituteName!=libraryServer.instituteName)
 				{
-					//LibraryServer libraryServer = (LibraryServer) getServerObject(args, LibraryServers[i]);
-					DatagramSocket socket = null;
-					try
+					try 
 					{
-						socket = new DatagramSocket();
-						byte[] msgOut = ("Book:"+m_bookName+":"+m_authorName).getBytes();
-						InetAddress host = InetAddress.getByName("localhost");
-						int ServerPort = libraryServer.getUDPPort();
-						DatagramPacket request = new DatagramPacket(msgOut, ("Book:"+m_bookName+":"+m_authorName).length(),host,ServerPort);
-						socket.send(request);
+						//LibraryServer libraryServer = (LibraryServer) getServerObject(args, LibraryServers[i]);
+						DatagramSocket socket = null;
+						try
+						{
+							socket = new DatagramSocket();
+							String strInputParameters="ReserveBook:"+m_bookName;
+							byte[] msgOut = (strInputParameters).getBytes();
+							InetAddress host = InetAddress.getByName("localhost");
+							int ServerPort = libraryServer.getUDPPort();
+							
+							DatagramPacket request = new DatagramPacket(msgOut, (strInputParameters).length(),host,ServerPort);
+							socket.send(request);
 
-						byte[] msgIn = new byte[10000];
-						DatagramPacket reply = new DatagramPacket(msgIn, msgIn.length);
-						socket.receive(reply);
-						response+=new String(reply.getData());
-					}
-					catch(Exception ex)
-					{
-						ex.printStackTrace();
-					}
-					finally
-					{
-						socket.close();
-					}
+							byte[] msgIn = new byte[10000];
+							DatagramPacket reply = new DatagramPacket(msgIn, msgIn.length);
+							socket.receive(reply);
+							response=new String(reply.getData());
 
-					//					response += libraryServer.GetNonReturnersByServer(NumDays);
-				} 
-				catch (Exception e) 
-				{
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+							if(response.equals("true"))//Book granted by other Server
+							{
+								bookAvailabe=true;
+								//Add granted book to Students Reserved book list
+								Student objStudent = null;
+								objStudent = getStudent(m_username);
+								Book objBook = new Book(m_bookName,m_authorName,0);
+								(objStudent.getReservedBooks()).put(objBook,14);//Add Book to Student's reserved list for 14 days
+								//success = true;
+								logger.info(m_username+": Reserved the book "+m_bookName+"\n. Remaining copies of"+ m_bookName+" is/are "+objBook.getNumOfCopy());
+								System.out.println(this.instituteName +" Library : "+m_username+": Reserved the book "+m_bookName+"\n. Remaining copies of "+ m_bookName+" is/are "+objBook.getNumOfCopy());	
+								break;
+							}
+							
+					
+						}
+						catch(Exception ex)
+						{
+							ex.printStackTrace();
+						}
+						finally
+						{
+							socket.close();
+						}
+
+						//					response += libraryServer.GetNonReturnersByServer(NumDays);
+					} 
+					catch (Exception e) 
+					{
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 				}
 			}
 		}

@@ -25,14 +25,16 @@ private LibraryServer server;
 			String data = new String(request.getData());
 			String[] requestParts = data.split(":");
 			String response = "";
-			if(requestParts.length == 2 ) {
+			if(requestParts[0].equals("NonReturners")) {
 				
 				//Call GetNonReturners
 				response = server.GetNonReturnersByServer(Integer.parseInt(requestParts[1].trim()));
 			}
-			else {
+			else if(requestParts[0].equals("ReserveBook")) {
 				//Call Reserve Book
-				response = server.reserveBook("", "", requestParts[1], requestParts[2])?"true":"false";
+				
+				response = server.grantBookInterServer(requestParts[1])?"true":"false";
+
 			}
 			
 			DatagramPacket reply = new DatagramPacket(response.getBytes(), response.length(), request.getAddress(), request.getPort());
