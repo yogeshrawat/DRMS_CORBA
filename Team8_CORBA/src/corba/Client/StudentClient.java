@@ -37,10 +37,7 @@ public class StudentClient extends Client{
 	{
 		Boolean valid = false;
 		Library server = null;
-		//		System.out.println("Enter Institute Name");
-		//		System.out.println("'Concordia' For Concordia University");
-		//		System.out.println("'Ottawa' For Ottawa University");
-		//		System.out.println("'Waterloo' For Waterloo University");
+		
 		while(!valid)
 		{
 			try{
@@ -103,8 +100,7 @@ public class StudentClient extends Client{
 
 			Library objServer = null;
 			Scanner keyboard = new Scanner(System.in);
-			//to which server you want to connect
-			//objServer = objClient.ServerValidation(keyboard);
+			
 			Integer userInput = 0;
 
 			String userName = null, password = null, institution = null;
@@ -148,6 +144,7 @@ public class StudentClient extends Client{
 						FileWriter fw=new FileWriter(fi);
 						objClient.setLogger(userName, ".\\logs\\students\\"+userName+".txt");
 						objClient.logger.info("Account already exist with username as : "+userName);
+						System.out.println(institution+" library : Account already exist with username as : "+userName);
 						fw.close();
 
 					}					
@@ -170,7 +167,7 @@ public class StudentClient extends Client{
 
 
 						institution= getEducationalInstituteFromUser();
-						//objClient.InitializeServer();
+					
 						objServer = objClient.ServerValidation(institution);
 						int loginResult = objServer.checkUser(userName, password, institution);
 						switch(loginResult)
@@ -202,11 +199,12 @@ public class StudentClient extends Client{
 					}
 					success = objServer.reserveBook(userName, password, bookName, authorName);
 					if(success){
-						System.out.println("Success");
+						System.out.println(institution+"library : Book reserved successfully for user "+userName);
 						objClient.setLogger(userName, ".\\logs\\students\\"+userName+".txt");
 						objClient.logger.info("Book reserved successfully for user "+userName);
 					}
 					else{
+						System.out.println("Required book not available.");
 						objClient.setLogger(userName, ".\\logs\\students\\"+userName+".txt");
 						objClient.logger.info("Book could not be reserved for : "+userName);
 						}
@@ -224,12 +222,13 @@ public class StudentClient extends Client{
 					System.out.println("Author: ");
 					authorName = objClient.InputStringValidation(keyboard);
 					institution= getEducationalInstituteFromUser();
-					//objClient.InitializeServer();
+					
 					objServer = objClient.ServerValidation(institution);
 					if(objServer.reserveInterLibrary(userName, password, bookName, authorName))	
 					{
 						objClient.setLogger(userName, ".\\logs\\students\\"+userName+".txt");
 						objClient.logger.info("Interlibrary : Book reserved successfully for user "+userName);
+						System.out.println("Interlibrary : Book reserved successfully for user "+userName);
 					}
 					else{
 						objClient.setLogger(userName, ".\\logs\\students\\"+userName+".txt");
@@ -264,7 +263,7 @@ public class StudentClient extends Client{
 			Client objClient = new StudentClient();
 			Scanner keyboard = new Scanner(System.in);
 			ans = Integer.parseInt(objClient.InputStringValidation(keyboard));
-			//ans = Integer.parseInt(objClient.InputStringValidation(keyboard));
+			
 			if(ans == 1||ans==2||ans==3)
 			{
 				break;
@@ -282,4 +281,5 @@ public class StudentClient extends Client{
 		}
 		return null;
 	}
+	
 }
