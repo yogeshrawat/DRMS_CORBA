@@ -226,6 +226,8 @@ public class LibraryServer extends LibraryPOA implements Runnable {
 				Book book = new Book("Book"+j, "Author"+j, 10);
 				this.tableBooks.put(book.getName(), book);
 			}
+			Book book = new Book("Book3", "Author3", 10);
+			this.tableBooks.put("Book3", book);
 		}
 		else{
 			for(int j=2; j<3; j++) { 
@@ -389,9 +391,9 @@ public class LibraryServer extends LibraryPOA implements Runnable {
 	{
 		boolean isAvailable=false;
 			System.out.println(strBookName);
-			//strBookName=strBookName.substring(1);
+			strBookName=strBookName.trim();
 		System.out.println("I am "+this.instituteName+". Grant book.");
-		Book objBook = tableBooks.get(strBookName);
+		Book objBook = (Book)this.tableBooks.get(strBookName);
 		if(objBook!= null)
 		{
 			//reserve the book
@@ -430,7 +432,7 @@ public class LibraryServer extends LibraryPOA implements Runnable {
 	{
 		System.out.println("I am "+this.instituteName+". isAvailable.");
 		boolean isAvailable=false;
-		Book objBook = tableBooks.get(strBookName);
+		Book objBook = (Book)tableBooks.get(strBookName.trim());
 		if(objBook!= null)
 		{
 			//reserve the book
@@ -627,7 +629,7 @@ public class LibraryServer extends LibraryPOA implements Runnable {
 	public boolean reserveInterLibrary(String m_username, String m_password,
 			String m_bookName, String m_authorName) 
 	{
-		String response = null;
+		String response = "";
 		String[] args = null;
 		if(isBookAvailable(m_bookName))
 		{
@@ -661,7 +663,7 @@ public class LibraryServer extends LibraryPOA implements Runnable {
 							socket.receive(reply);
 							response=new String(reply.getData());
 
-							if(response.equals("true"))//Book granted by other Server
+							if(response.trim().equalsIgnoreCase("true"))//Book granted by other Server
 							{
 								bookAvailabe=true;
 								//Add granted book to Students Reserved book list
