@@ -10,13 +10,7 @@ import java.util.*;
 import java.net.*;
 import java.io.*;
 
-/**
- * This is the main class. It creates the necessary FrontEnd objects and accepts
- * client requests
- * 
- * @author Parth Patel
- *
- */
+
 public class FE_Main {
 
 	public static void main(String[] args) {
