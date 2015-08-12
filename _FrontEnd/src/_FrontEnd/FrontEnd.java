@@ -1,27 +1,36 @@
 package _FrontEnd;
+
+import java.io.IOException;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
+import java.net.SocketException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
 import Call.BoolResponse;
+import library.LibraryOperations;
 import library.LibraryPOA;
 
 public class FrontEnd extends LibraryPOA {
-	
-	private static HashMap<String, InetSocketAddress> replicaManagerData=new HashMap<String, InetSocketAddress>();
-	private String systemProperty=null;
+
+	private static HashMap<String, InetSocketAddress> replicaManagerData = new HashMap<String, InetSocketAddress>();
+	private String systemProperty = null;
 	private InetSocketAddress sequencerAddress;
 	private String libraryName;
-	
-	public FrontEnd(String libararyName,InetSocketAddress sequencerAddress){
-		libraryName=this.libraryName;
-		sequencerAddress=this.sequencerAddress;
+
+	public FrontEnd(String libararyName, InetSocketAddress sequencerAddress) {
+		libraryName = this.libraryName;
+		sequencerAddress = this.sequencerAddress;
 	}
-	public static void addReplicaManager(String replicaManager, InetAddress IPAddress, int portNumber){
-		replicaManagerData.put(replicaManager, new InetSocketAddress(IPAddress,portNumber));
+
+	public static void addReplicaManager(String replicaManager,
+			InetAddress IPAddress, int portNumber) {
+		replicaManagerData.put(replicaManager, new InetSocketAddress(IPAddress,
+				portNumber));
 	}
-	
+
 	@Override
 	public boolean createAccount(String m_firstName, String m_lastName,
 			String m_emailAddress, String m_phoneNumber, String m_username,
@@ -68,7 +77,8 @@ public class FrontEnd extends LibraryPOA {
 		return replicaManagerData;
 	}
 
-	public static void setReplicaManagerData(HashMap<String, InetSocketAddress> replicaManagerData) {
+	public static void setReplicaManagerData(
+			HashMap<String, InetSocketAddress> replicaManagerData) {
 		FrontEnd.replicaManagerData = replicaManagerData;
 	}
 
@@ -95,41 +105,59 @@ public class FrontEnd extends LibraryPOA {
 	public void setLibraryName(String libraryName) {
 		this.libraryName = libraryName;
 	}
-	private boolean calculateMajority(ArrayList<BoolResponse> response){
-		System.out.println("Response Size:"+response.size());
+
+	private boolean calculateMajority(ArrayList<BoolResponse> response) {
+		System.out.println("Response Size:" + response.size());
 		System.out.println("Responses are:");
-		for(BoolResponse b:response){
-			System.out.println("Replica:"+b.getReplicaName());
-			System.out.println("Response:"+b.getResult());
+		for (BoolResponse b : response) {
+			System.out.println("Replica:" + b.getReplicaName());
+			System.out.println("Response:" + b.getResult());
 		}
-		if(response.size()!=replicaManagerData.size()&&response.size()!=0){
+		if (response.size() != replicaManagerData.size()
+				&& response.size() != 0) {
 			return response.get(0).getResult();
 		}
-		boolean majorityResult=false;
-		int counter=0;
-		
-		for(BoolResponse r:response){
-			if(counter==0){
-				majorityResult=r.getResult();
+		boolean majorityResult = false;
+		int counter = 0;
+
+		for (BoolResponse r : response) {
+			if (counter == 0) {
+				majorityResult = r.getResult();
 				counter++;
-			}
-			else if(majorityResult=r.getResult()){
+			} else if (majorityResult = r.getResult()) {
 				counter++;
-			}
-			else{
+			} else {
 				counter--;
 			}
 		}
-		if(counter==replicaManagerData.size()){
+		if (counter == replicaManagerData.size()) {
 			return majorityResult;
 		}
-		
-		for(BoolResponse r:response){
-			if(r.getResult()!=majorityResult){
-				notifySoftwareFailure(r.getReplicaName(),libraryName);
+
+		for (BoolResponse r : response) {
+			if (r.getResult() != majorityResult) {
+				notifySoftwareFailure(r.getReplicaName(), libraryName);
 				return majorityResult;
 			}
 		}
 		return false;
+	}
+
+	public void notifySoftwareFailure(String replicaName, String libraryName){
+		DatagramSocket socket=null;
+		try{
+			socket=new DatagramSocket();
+			String strData="Failure"+":"+replicaName+":"+libraryName;
+			byte[] sendBuffer=strData.getBytes();
+			DatagramPacket sendPacket=new DatagramPacket(sendBuffer, sendBuffer.length, 
+					replicaManagerData.get(replicaName).getAddress(),replicaManagerData.get(replicaName).getPort());
+			socket.send(sendPacket);
+		}
+		catch(SocketException e){
+			System.out.println("Exception: "+e.getMessage());		
+		}
+		catch(IOException e){
+			System.out.println("Exception:"+e.getMessage());
+		}
 	}
 }
